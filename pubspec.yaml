@@ -3,6 +3,13 @@ description: "Windows Management Instrumentation."
 version: 0.0.2
 homepage: https://github.com/huanguan1978/wmi
 
+topics:
+  - windows
+  - win32
+  - device
+  - uuid
+  - wmi
+
 environment:
   sdk: ^3.5.0
   flutter: '>=3.3.0'
