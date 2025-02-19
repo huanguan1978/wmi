@@ -18,6 +18,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final _wmiPlugin = Wmi();
   bool _wmiInitialized = false;
+  bool _wmicPreInstalled = false;
   String _platformVersion = 'Unknown';
   String _wmiinfo = 'Unknown';
   String _wminame = 'Unknown';
@@ -46,6 +47,13 @@ class _MyAppState extends State<MyApp> {
       platformVersion = 'Failed to get platform version.';
     }
 
+    bool wmicPreInstalled = false;
+    try {
+      wmicPreInstalled = await _wmiPlugin.wmicPreInstalled() ?? false;
+    } on PlatformException catch (e) {
+      debugPrint('Failed wmicPreInstalled(), error: $e');
+    }
+
     bool wmiInitialized = false;
     try {
       wmiInitialized = await _wmiPlugin.wmiInit() ?? false;
@@ -72,6 +80,7 @@ class _MyAppState extends State<MyApp> {
     setState(() {
       _platformVersion = platformVersion;
       _wmiInitialized = wmiInitialized;
+      _wmicPreInstalled = wmicPreInstalled;
       _wmiinfo = wmiinfo;
       _wminame = wminame;
     });
@@ -88,6 +97,7 @@ class _MyAppState extends State<MyApp> {
           // Text('Running on: $_platformVersion\n $_wmiinfo\n'),
           child: Column(
             children: <Widget>[
+              Text('wmicPreInstalled: $_wmicPreInstalled'),
               Text('Running on: $_platformVersion'),
               Text('WMI Info, $_wminame: $_wmiinfo'),
               SizedBox(height: 20),

@@ -27,6 +27,10 @@ abstract class WmiPlatform extends PlatformInterface {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
 
+  Future<bool?> wmicPreInstalled() {
+    throw UnimplementedError('wmicPreInstalled() has not been implemented.');
+  }
+
   Future<bool?> wmiInit({String servename = 'ROOT\\CIMV2'}) {
     throw UnimplementedError('wmiInit(servename) has not been implemented.');
   }

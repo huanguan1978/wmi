@@ -17,6 +17,13 @@ class MethodChannelWmi extends WmiPlatform {
   }
 
   @override
+  Future<bool?> wmicPreInstalled() async {
+    final wmicPreInstalled =
+        await methodChannel.invokeMethod<bool>('wmicPreInstalled');
+    return wmicPreInstalled;
+  }
+
+  @override
   Future<bool?> wmiInit({String servename = 'ROOT\\CIMV2'}) async {
     final args = <String, dynamic>{'servename': servename};
     final initialized = await methodChannel.invokeMethod<bool>('wmiInit', args);

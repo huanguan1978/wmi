@@ -5,14 +5,17 @@ class Wmi {
     return WmiPlatform.instance.getPlatformVersion();
   }
 
-  // initialize WMI resources
+  /// wmicPreInstalled? (version < Windows 11 version 24H2) ? true : false
+  Future<bool?> wmicPreInstalled() => WmiPlatform.instance.wmicPreInstalled();
+
+  /// initialize WMI resources
   Future<bool?> wmiInit({String servename = 'ROOT\\CIMV2'}) =>
       WmiPlatform.instance.wmiInit(servename: servename);
 
-  // release WMI resources
+  /// release WMI resources
   Future<void> wmiRelease() => WmiPlatform.instance.wmiRelease();
 
-  // Get-WmiObject single property
+  /// Get-WmiObject single property
   Future<String?> wmiValue({
     required String fieldname,
     required String tablename,
@@ -26,7 +29,7 @@ class Wmi {
         delimiter: delimiter,
       );
 
-  // Get-WmiObject multiple properties
+  /// Get-WmiObject multiple properties
   Future<String?> wmiValues({
     required String fieldname,
     required String tablename,
@@ -40,26 +43,26 @@ class Wmi {
         delimiter: delimiter,
       );
 
-  // Get-WmiObject -Class Win32_ComputerSystemProduct | Select-Object -Property UUID
+  /// Get-WmiObject -Class Win32_ComputerSystemProduct | Select-Object -Property UUID
   Future<String?> uuid() => WmiPlatform.instance.wmiValue(
         fieldname: 'UUID',
         tablename: 'Win32_ComputerSystemProduct',
       );
 
-  // Get-WmiObject -Class Win32_OperatingSystem | Select-Object -Property SerialNumber
+  /// Get-WmiObject -Class Win32_OperatingSystem | Select-Object -Property SerialNumber
   Future<String?> osSerialNumber() => WmiPlatform.instance.wmiValue(
         fieldname: 'SerialNumber',
         tablename: 'Win32_OperatingSystem',
       );
 
-  // Get-WmiObject -Class Win32_OperatingSystem | Select-Object -Property RegisteredUser,SerialNumber,Name
+  /// Get-WmiObject -Class Win32_OperatingSystem | Select-Object -Property RegisteredUser,SerialNumber,Name
   Future<String?> osInfo() => WmiPlatform.instance.wmiValues(
         fieldname: 'RegisteredUser,SerialNumber,Name',
         tablename: 'Win32_OperatingSystem',
       );
 
-  // Get-WmiObject -Class Win32_NetworkAdapter | Select-Object -Property MacAddress
-  // SELECT MacAddress FROM Win32_NetworkAdapterConfiguration WHERE DHCPEnabled=TRUE
+  /// Get-WmiObject -Class Win32_NetworkAdapter | Select-Object -Property MacAddress
+  /// SELECT MacAddress FROM Win32_NetworkAdapterConfiguration WHERE DHCPEnabled=TRUE
   Future<String?> macAddress() => WmiPlatform.instance.wmiValue(
         fieldname: 'MacAddress',
         tablename: 'Win32_NetworkAdapter',
@@ -67,19 +70,19 @@ class Wmi {
             "WHERE (MACAddress IS NOT NULL) AND (NOT (PNPDeviceID LIKE 'ROOT%'))",
       );
 
-  // Get-WmiObject -Class Win32_BIOS | Select-Object -Property SerialNumber
+  /// Get-WmiObject -Class Win32_BIOS | Select-Object -Property SerialNumber
   Future<String?> biosSerialNumber() => WmiPlatform.instance.wmiValue(
         fieldname: 'SerialNumber',
         tablename: 'Win32_BIOS',
       );
 
-  // Get-WmiObject -Class Win32_DiskDrive | Select-Object SerialNumber
+  /// Get-WmiObject -Class Win32_DiskDrive | Select-Object SerialNumber
   Future<String?> diskDriveSerialNumber() => WmiPlatform.instance.wmiValue(
         fieldname: 'SerialNumber',
         tablename: 'Win32_DiskDrive',
       );
 
-  // Get-WmiObject -Class Win32_Processor | Select-Object ProcessorId
+  /// Get-WmiObject -Class Win32_Processor | Select-Object ProcessorId
   Future<String?> processorId() => WmiPlatform.instance.wmiValue(
         fieldname: 'ProcessorId',
         tablename: 'Win32_Processor',

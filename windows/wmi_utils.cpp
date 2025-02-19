@@ -5,6 +5,9 @@
 // for example, get the UUID of the system
 int main() {
 
+    bool wmicPreInstalled = WmiUtils::wmicPreInstalled();
+    std::cout << "wmicPreInstalled:" << (wmicPreInstalled ? "Yes" : "No") <<  std::endl;
+
     std::string serveName = "ROOT\\CIMV2";
     bool initialized = WmiUtils::wmiInit(serveName);
 
@@ -343,6 +346,11 @@ std::wstring _exec2(IWbemServices *pSvc1,
     pEnumerator->Release();
 
     return result.str();
+}
+
+bool wmicPreInstalled()
+{
+    return !IsWindowsVersionOrGreater(10, 0, 22572);
 }
 
 bool wmiInit(std::string serveName)

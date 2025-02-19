@@ -7,9 +7,11 @@
 #include <string>
 #include <vector>
 
+#include <windows.h>
+#include <VersionHelpers.h>
+
 #include <Wbemidl.h>
 #include <comutil.h>
-#include <windows.h>
 
 #pragma comment(lib, "wbemuuid.lib")
 #pragma comment(lib, "comsuppw.lib")
@@ -22,6 +24,7 @@ extern IWbemServices *pSvc;
 extern IWbemLocator *pLoc;
 
 // Function prototypes
+bool wmicPreInstalled();
 bool wmiInit(std::string serveName);
 void wmiRelease();
 std::wstring wmiValue(std::string tableName, std::string fieldName, std::string condition = "", std::string delimiter = ",");

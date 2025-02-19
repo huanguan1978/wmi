@@ -91,6 +91,21 @@ void WmiPlugin::HandleMethodCall(
         // Return the version information as a success result.
         result->Success(flutter::EncodableValue(version_stream.str()));
     }
+    else if (method_call.method_name().compare("wmicPreInstalled") == 0)
+    {
+        bool wmicPreInstalled = false;
+        try
+        {
+            wmicPreInstalled = WmiUtils::wmicPreInstalled();
+        }
+        catch (const std::exception &e)
+        {
+            result->Error("wmicPreInstalled Error", e.what());
+            return;
+        }
+
+        result->Success(flutter::EncodableValue(wmicPreInstalled));
+    }
     else if (method_call.method_name().compare("wmiRelease") == 0)
     {
 

@@ -9,6 +9,9 @@ class MockWmiPlatform with MockPlatformInterfaceMixin implements WmiPlatform {
   Future<String?> getPlatformVersion() => Future.value('42');
 
   @override
+  Future<bool?> wmicPreInstalled() => Future.value(false);
+
+  @override
   Future<bool?> wmiInit({String servename = 'ROOT\\CIMV2'}) =>
       Future.value(false);
 
