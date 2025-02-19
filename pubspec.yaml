@@ -1,10 +1,10 @@
 name: wmi
 description: "Windows Management Instrumentation."
-version: 0.0.1
+version: 0.0.2
 homepage: https://github.com/huanguan1978/wmi
 
 environment:
-  sdk: ^3.6.1
+  sdk: ^3.5.0
   flutter: '>=3.3.0'
 
 dependencies:
