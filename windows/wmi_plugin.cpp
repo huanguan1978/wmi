@@ -22,6 +22,11 @@
 namespace wmi
 {
 
+bool wmicPreInstalled()
+{
+    return !IsWindowsVersionOrGreater(10, 0, 22572);
+}
+
 // static
 void WmiPlugin::RegisterWithRegistrar(
     flutter::PluginRegistrarWindows *registrar)
@@ -96,7 +101,7 @@ void WmiPlugin::HandleMethodCall(
         bool wmicPreInstalled = false;
         try
         {
-            wmicPreInstalled = WmiUtils::wmicPreInstalled();
+            wmicPreInstalled = wmi::wmicPreInstalled();
         }
         catch (const std::exception &e)
         {
