@@ -41,6 +41,8 @@ std::vector<std::wstring> _exec(IWbemServices *pSvc, std::string tableName,
                                 std::string fieldName,
                                 std::string condition = "");
 
+std::wstring _vtToString(VARIANT &vtProp);
+
 } // namespace WmiUtils
 
 #endif // WMI_UTILS_H

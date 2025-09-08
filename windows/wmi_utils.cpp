@@ -189,12 +189,9 @@ std::vector<std::wstring> _exec(IWbemServices *pSvc1, std::string tableName, std
         {
             std::cerr << "Failed to get " + bstrFieldName << ", Error code = 0x" << std::hex << hres << std::endl;
         }
-        else
+        else if (vtProp.vt != VT_NULL)
         {
-            if (vtProp.vt != VT_NULL)
-            {
-                vecValue.push_back(vtProp.bstrVal); // store value
-            }
+            vecValue.push_back(_vtToString(vtProp));
         }
 
         VariantClear(&vtProp);
@@ -280,20 +277,7 @@ std::wstring _exec2(IWbemServices *pSvc1,
                 }
 
                 // Display property name and value
-                result << bstrName << L": ";
-                switch (vtProp.vt)
-                {
-                case VT_BSTR:
-                    result << vtProp.bstrVal << std::endl;
-                    break;
-                case VT_I4:
-                    result << vtProp.lVal << std::endl;
-                    break;
-                // Add more cases for other data types if needed
-                default:
-                    result << L"Unknown data type" << std::endl;
-                    break;
-                }
+                result << bstrName << L": " << _vtToString(vtProp) << std::endl;
 
                 SysFreeString(bstrName);
                 VariantClear(&vtProp);
@@ -324,20 +308,7 @@ std::wstring _exec2(IWbemServices *pSvc1,
                 }
 
                 // Display property name and value
-                result << elemName << L": ";
-                switch (vtProp.vt)
-                {
-                case VT_BSTR:
-                    result << vtProp.bstrVal << std::endl;
-                    break;
-                case VT_I4:
-                    result << vtProp.lVal << std::endl;
-                    break;
-                // Add more cases for other data types if needed
-                default:
-                    result << L"Unknown data type" << std::endl;
-                    break;
-                }
+                result << elemName << L": " << _vtToString(vtProp) << std::endl;
 
                 VariantClear(&vtProp);
             }
@@ -349,6 +320,58 @@ std::wstring _exec2(IWbemServices *pSvc1,
     pEnumerator->Release();
 
     return result.str();
+}
+
+// converts variant value to string based upon its type
+std::wstring _vtToString(VARIANT &vtProp)
+{
+    VARTYPE vt = vtProp.vt;
+    bool byRef = vt & VT_BYREF;
+    vt = vt & ~VT_BYREF;
+
+#define DEREF(directVal, ptrVal) (byRef ? (*(ptrVal)) : (directVal))
+
+    switch (vt)
+    {
+    case VT_NULL:
+    case VT_EMPTY:
+        return L"";
+    case VT_BSTR:
+        return DEREF(vtProp.bstrVal, vtProp.pbstrVal);
+    case VT_I1:
+        return std::to_wstring(DEREF(vtProp.cVal, vtProp.pcVal));
+    case VT_I2:
+        return std::to_wstring(DEREF(vtProp.iVal, vtProp.piVal));
+    case VT_I4:
+        return std::to_wstring(DEREF(vtProp.lVal, vtProp.plVal));
+    case VT_I8:
+        return std::to_wstring(DEREF(vtProp.llVal, vtProp.pllVal));
+    case VT_INT:
+        return std::to_wstring(DEREF(vtProp.intVal, vtProp.pintVal));
+    case VT_UI1:
+        return std::to_wstring(DEREF(vtProp.bVal, vtProp.pbVal));
+    case VT_UI2:
+        return std::to_wstring(DEREF(vtProp.uiVal, vtProp.puiVal));
+    case VT_UI4:
+        return std::to_wstring(DEREF(vtProp.ulVal, vtProp.pulVal));
+    case VT_UI8:
+        return std::to_wstring(DEREF(vtProp.ullVal, vtProp.pullVal));
+    case VT_UINT:
+        return std::to_wstring(DEREF(vtProp.uintVal, vtProp.puintVal));
+    case VT_BOOL:
+        return DEREF(vtProp.boolVal, vtProp.pboolVal) == VARIANT_FALSE ? L"0" : L"1";
+    case VT_R4:
+        return std::to_wstring(DEREF(vtProp.fltVal, vtProp.pfltVal));
+    case VT_R8:
+        return std::to_wstring(DEREF(vtProp.dblVal, vtProp.pdblVal));
+    case VT_DATE:
+        return std::to_wstring(DEREF(vtProp.dblVal, vtProp.pdblVal));
+    // Add more data types if necessary ...
+    default:
+        return L"UnknownType";
+    }
+
+#undef DEREF
 }
 
 bool wmiInit(std::string serveName)
